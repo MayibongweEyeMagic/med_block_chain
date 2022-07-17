@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:med_block_chain/login_page.dart';
+import 'package:med_block_chain/pages/login_page.dart';
 
-void main() {
+import 'database/connectDB.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DBConnection.connect();
   runApp(const MyApp());
 }
 

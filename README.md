@@ -14,3 +14,17 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+### Links Used to understand properly what I'm doing.
+
+## mongo_dart library explained
+https://pub.dev/packages/mongo_dart
+
+## How to Connect Flutter With MongoDB ??
+https://flutteragency.com/connect-flutter-with-mongodb/
+
+## Designing a proper TextField
+https://www.kindacode.com/article/flutter-textfield-width-height-padding/
+
+## Article about sending and retrieving data on mongoDB
+https://levelup.gitconnected.com/mongodb-with-flutter-407de79f84e4
