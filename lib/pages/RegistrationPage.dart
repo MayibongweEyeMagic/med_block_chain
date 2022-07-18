@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-// import 'package:med_block_chain/database/connectDB.dart';
-// import 'package:mongo_dart/mongo_dart.dart' as m;
+import 'package:med_block_chain/database/connectDB.dart';
+import 'package:med_block_chain/pages/login_page.dart';
+import 'package:mongo_dart/mongo_dart.dart' as m;
 import 'package:med_block_chain/model/patient.dart';
-// import 'package:email_validator/email_validator.dart';
+import 'package:crypt/crypt.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -19,12 +22,15 @@ class RegistrationPageState extends State<RegistrationPage>{
   bool _emailValidate =false;
   bool _passValidate =false;
 
+  String _errorMessage ='';
+
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
+    super.dispose();
     usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -36,10 +42,16 @@ class RegistrationPageState extends State<RegistrationPage>{
 
     Future.delayed(Duration.zero, () {
       setState(() {
-        final Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
-        usernameController.text = patient.username;
-        emailController.text = patient.email;
-        passwordController.text = patient.password;
+        try {
+          final Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
+          usernameController.text = patient.username;
+          emailController.text = patient.email;
+          passwordController.text = patient.password;
+        }catch(e)
+        {
+          print(e);
+        }
+
       });
     });
   }
@@ -138,16 +150,31 @@ class RegistrationPageState extends State<RegistrationPage>{
                               )
                             ),
                           ),
+
                         ),
+
                       ),
                     ),
+                  FlutterPwValidator(
+                      controller: passwordController,
+                      minLength: 6,
+                      uppercaseCharCount: 1,
+                      numericCharCount: 1,
+                      specialCharCount: 1,
+                      width: 300 ,
+                      height: 100,
+                      onSuccess: () {},
+                      onFail: () {},
+                  ),
                   const SizedBox(height: 10),
                  // these is code for  the sign in button 
                  ElevatedButton(
                    // padding: const EdgeInsets.symmetric(horizontal: 25.0),
                    onPressed: () {
-                     checkIsEmpty(usernameController.text,
-                         emailController.text, passwordController.text);
+                     checkUsernameVal(usernameController.text);
+                     checkEmailValidity(emailController.text);
+                     checkPasswordVal(passwordController.text);
+                     register();
                    },
                    child: Container(
                     padding: const EdgeInsets.all(18),
@@ -166,9 +193,13 @@ class RegistrationPageState extends State<RegistrationPage>{
                       ),
                     ),
                    ),
-                 ), 
-              
-                    ],),
+                 ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(_errorMessage, style: const TextStyle(color: Colors.red),),
+                  ),
+                ],
+              ),
             ),
           ),
        ),
@@ -183,27 +214,84 @@ class RegistrationPageState extends State<RegistrationPage>{
     //   password: passwordController.text,
     // );
     // await DBConnection.insert(patient);
-    print(usernameController.text);
-    print(emailController.text);
-    print(passwordController.text);
   }
 
-  void checkIsEmpty(String username, String email, String password) async {
-    if (username.isEmpty || email.isEmpty || password.isEmpty)
+  void checkUsernameVal(String username) async {
+    if (username.isEmpty)
     {
       setState(() {
         username.isEmpty ? _userValidate = true : _userValidate = false;
-        email.isEmpty ? _emailValidate = true : _emailValidate = false;
+      });
+    }
+    // check if it already exists in the database
+    else
+    {
+      setState(() {_userValidate = false;});
+
+    }
+  }
+
+  void checkEmailValidity(String email) async {
+     if (email.isEmpty) {
+       setState(() {
+         email.isEmpty ? _emailValidate = true : _emailValidate = false;
+       });
+
+     }
+     else {
+       setState(() {_emailValidate = false;});
+       if(!EmailValidator.validate(email, true))
+       {
+         setState(() {_errorMessage ='Email is invalid';});
+       }
+       //check if it already exists in the database
+       else
+       {
+         setState(() {_errorMessage ='';});
+       }
+     }
+  }
+
+  void checkPasswordVal(String password) async {
+    if (password.isEmpty)
+    {
+      setState(() {
         password.isEmpty ? _passValidate = true : _passValidate = false;
       });
     }
-
-    // else if()
-    // {
-    //
-    // }
-
+    else{
+      setState(() {
+         _passValidate = false;
+      });
+    //  hashing the password
+      if(password.length <6) {
+        setState(() {_errorMessage ='Password is not correct';});
+      }
+    }
   }
 
+  void register() async{
+    if (_userValidate == false &&
+        _emailValidate == false &&
+        _passValidate ==false && _errorMessage.isEmpty) {
+
+      final String password =Crypt.sha256(passwordController.text).toString();
+
+      final patient = Patient(
+        id: m.ObjectId(),
+        username: usernameController.text,
+        email: emailController.text,
+        password: password,
+      );
+      await DBConnection.insert(patient);
+      setState(()
+      {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+      });
+
+
+    }
+
+  }
 
 }

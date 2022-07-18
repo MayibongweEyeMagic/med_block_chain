@@ -28,3 +28,6 @@ https://www.kindacode.com/article/flutter-textfield-width-height-padding/
 
 ## Article about sending and retrieving data on mongoDB
 https://levelup.gitconnected.com/mongodb-with-flutter-407de79f84e4
+
+### Storing passwords to a devices secure storage 
+http://www.refactord.com/guides/hashing-storing-passwords-in-flutter
