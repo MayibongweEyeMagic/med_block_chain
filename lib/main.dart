@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_block_chain/pages/HomePage.dart';
 import 'package:med_block_chain/pages/login_page.dart';
 
 import 'database/connectDB.dart';
@@ -17,7 +18,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
      debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: Scaffold(
+        body: SafeArea(
+          child: HomePage(),
+        ),
+      ),
     );
   }
 }
