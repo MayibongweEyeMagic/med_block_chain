@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:med_block_chain/pages/GeneratePasswordPage.dart';
 import 'package:med_block_chain/pages/HomePage.dart';
+import 'package:med_block_chain/pages/QrScanPage.dart';
 import 'package:med_block_chain/pages/login_page.dart';
 
 import 'database/connectDB.dart';
@@ -20,10 +22,12 @@ class MyApp extends StatelessWidget {
      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SafeArea(
-          child: HomePage(),
+          child: GeneratePasswordPage(),
         ),
       ),
     );
   }
 }
+
+
 
