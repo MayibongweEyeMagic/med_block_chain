@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:med_block_chain/database/connectDB.dart';
+import 'package:med_block_chain/pages/HomePage.dart';
 import 'package:med_block_chain/pages/RegistrationPage.dart';
 import 'package:med_block_chain/pages/forgot_password.dart';
 
@@ -16,9 +17,11 @@ class LoginPage extends StatefulWidget {
  
 }
 
- class LoginPageState extends State<LoginPage>{
+ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin{
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  late AnimationController controller;
 
   bool _emailValidate =false;
   bool _passValidate =false;
@@ -30,22 +33,30 @@ class LoginPage extends StatefulWidget {
 
   @override
   void dispose() {
-
     super.dispose();
     emailController.dispose();
+    passwordController.dispose();
+    controller.dispose();
   }
 
   @override
   void initState() {
-    super.initState();
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..addListener(() {
+      setState(() {});
+    });
+
     try{
       final Login login =ModalRoute.of(context)!.settings.arguments as Login;
       emailController.text = login.email;
       passwordController.text =login.password;
-    } catch(e)
-    {
+    } catch(e) {
       print(e);
     }
+    super.initState();
   }
 
   void checkEmailField(String email) {
@@ -78,7 +89,7 @@ class LoginPage extends StatefulWidget {
 
     var object = await DBConnection.login(login);
 
-    if (object == null && emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+    if (object['email'] == null && emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       setState(() {_errorMessage ='Account with that email does not exist';});
     }
     else {
@@ -88,7 +99,9 @@ class LoginPage extends StatefulWidget {
       }
       else {
         setState(() {
-          _errorMessage ='Successfully logged in';
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()));
           emailController.clear();
           passwordController.clear();
         });
@@ -151,6 +164,7 @@ class LoginPage extends StatefulWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(left:20.0),
                           child: TextField(
+                            keyboardType: TextInputType.emailAddress,
                             controller: emailController,
                             decoration:InputDecoration(
                               border: InputBorder.none,
@@ -174,6 +188,7 @@ class LoginPage extends StatefulWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(left:20.0),
                           child: TextField(
+                            keyboardType: TextInputType.visiblePassword,
                             controller: passwordController,
                             obscureText: _isObscure,
                             decoration:InputDecoration(
@@ -272,13 +287,21 @@ class LoginPage extends StatefulWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => RegistrationPage()));
+
+                            emailController.clear();
+                            passwordController.clear();
                         },
                      ),
+
                    ],
                  ),
+              SizedBox(height: 30,),
               //mainAxisAlignment: MainAxisAlignment.center,
-              
-                    ],),
+                CircularProgressIndicator(
+                  value: controller.value,
+                )
+                ],
+              ),
             ),
           ),
        ),

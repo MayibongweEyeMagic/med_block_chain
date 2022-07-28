@@ -1,4 +1,4 @@
-import 'package:email_auth/email_auth.dart';
+// import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:med_block_chain/database/connectDB.dart';
@@ -33,7 +33,6 @@ class RegistrationPageState extends State<RegistrationPage>{
 
   String _errorMessage ='';
 
-  EmailAuth emailAuth =  EmailAuth(sessionName: "Sample session");
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -331,11 +330,11 @@ class RegistrationPageState extends State<RegistrationPage>{
     }
   }
 
-  void sendOtp() async {
-    // bool result = await emailAuth.sendOtp(
-    //     recipientMail: emailController.value.text, otpLength: 5
-    // );
-  }
+  // void sendOtp() async {
+  //   // bool result = await emailAuth.sendOtp(
+  //   //     recipientMail: emailController.value.text, otpLength: 5
+  //   // );
+  // }
 
   void register() async{
     // final String password =Crypt.sha256(passwordController.text).toString();
