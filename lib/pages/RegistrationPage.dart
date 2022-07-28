@@ -1,11 +1,19 @@
+import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:med_block_chain/database/connectDB.dart';
 import 'package:med_block_chain/pages/login_page.dart';
 import 'package:mongo_dart/mongo_dart.dart' as m;
 import 'package:med_block_chain/model/patient.dart';
-import 'package:crypt/crypt.dart';
+// import 'package:crypt/crypt.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/style.dart';
+
+
+
+// import '../model/login_state.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -21,12 +29,16 @@ class RegistrationPageState extends State<RegistrationPage>{
   bool _userValidate =false;
   bool _emailValidate =false;
   bool _passValidate =false;
+  bool _pcValidate =false;
 
   String _errorMessage ='';
+
+  EmailAuth emailAuth =  EmailAuth(sessionName: "Sample session");
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController passConfirmController = TextEditingController();
 
   @override
   void dispose() {
@@ -34,6 +46,7 @@ class RegistrationPageState extends State<RegistrationPage>{
     usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    passConfirmController.dispose();
   }
 
   @override
@@ -47,8 +60,7 @@ class RegistrationPageState extends State<RegistrationPage>{
           usernameController.text = patient.username;
           emailController.text = patient.email;
           passwordController.text = patient.password;
-        }catch(e)
-        {
+        }catch(e) {
           print(e);
         }
 
@@ -59,7 +71,7 @@ class RegistrationPageState extends State<RegistrationPage>{
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.white,
        body: SafeArea(
          
         // SafeArea is an important and useful widget in Flutter which makes UI dynamic and adaptive 
@@ -68,17 +80,41 @@ class RegistrationPageState extends State<RegistrationPage>{
           child: Center(
             child:SingleChildScrollView (
               child: Column( 
-                   mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
-                    //code for the username textfield 
+                    SvgPicture.asset(
+                      'assets/caduceus-medical-symbol.svg',
+                      width: 60,
+                      height: 70,
+                    ),
+                    const SizedBox(height: 10),
+
+                    const Text("Med Chain", style:TextStyle(
+                        color: Color.fromARGB(255, 1, 77, 94),
+                        fontFamily: 'Monda',
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 38
+                    )
+                    ),
+                    const SizedBox(height: 2),
+                    const Text('Registration',
+                        style:TextStyle(
+                            color: Color.fromARGB(255, 1, 77, 94),
+                            fontFamily: 'Monda',
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 25
+                        )
+                    ),
+                    //code for the username textfield
+                  const SizedBox(height: 10),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 38),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          border: Border.all(color: const Color.fromARGB(255, 1, 77, 94)),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(left:20.0),
@@ -98,12 +134,12 @@ class RegistrationPageState extends State<RegistrationPage>{
             
                     //code for the email textfield
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 38),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          border: Border.all(color: const Color.fromARGB(255, 1, 77, 94)),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(left:20.0),
@@ -122,12 +158,12 @@ class RegistrationPageState extends State<RegistrationPage>{
                     const SizedBox(height: 10),
                     // code for the Password textfield
                      Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 38),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          border: Border.all(color: const Color.fromARGB(255, 1, 77, 94)),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(left:20.0),
@@ -150,11 +186,35 @@ class RegistrationPageState extends State<RegistrationPage>{
                               )
                             ),
                           ),
-
                         ),
-
                       ),
                     ),
+
+                  const SizedBox(height: 10),
+                  // code for the Password textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 38),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: const Color.fromARGB(255, 1, 77, 94)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:20.0),
+                        child: TextField(
+                          controller: passConfirmController,
+                          obscureText: _isObscure,
+                          decoration:InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Confirm Password',
+                              errorText: _pcValidate ? 'Field can\'t be empty' : null,
+
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   FlutterPwValidator(
                       controller: passwordController,
                       minLength: 6,
@@ -167,33 +227,37 @@ class RegistrationPageState extends State<RegistrationPage>{
                       onFail: () {},
                   ),
                   const SizedBox(height: 10),
-                 // these is code for  the sign in button 
-                 ElevatedButton(
-                   // padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                   onPressed: () {
-                     checkUsernameVal(usernameController.text);
-                     checkEmailValidity(emailController.text);
-                     checkPasswordVal(passwordController.text);
-                     register();
-                   },
-                   child: Container(
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurple,
-                      borderRadius: BorderRadius.circular(12),
-                      ),
-                    child: const Center(
-                      child: Text(
-                        "Register",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                 // these is code for  the sign in button
+                  SizedBox(
+                    width: 358,
+                    child: ElevatedButton(
+                      // padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      onPressed: () {
+                        checkUsernameVal(usernameController.text);
+                        checkEmailValidity(emailController.text);
+                        checkPasswordVal(passwordController.text, passConfirmController.text);
+                        register();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: const Color.fromARGB(255, 1, 77, 94), //background color of button
+                          elevation: 3, //elevation of button
+                          shape: RoundedRectangleBorder( //to set border radius to button
+                              borderRadius: BorderRadius.circular(20)
                           ),
+                          padding: const EdgeInsets.all(18) //content padding inside button
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Register",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
                       ),
                     ),
-                   ),
-                 ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(_errorMessage, style: const TextStyle(color: Colors.red),),
@@ -205,15 +269,6 @@ class RegistrationPageState extends State<RegistrationPage>{
        ),
 
     );
-  }
-  void insertUser() async {
-    // final patient = Patient(
-    //   id: m.ObjectId(),
-    //   username: usernameController.text,
-    //   email: emailController.text,
-    //   password: passwordController.text,
-    // );
-    // await DBConnection.insert(patient);
   }
 
   void checkUsernameVal(String username) async {
@@ -244,19 +299,25 @@ class RegistrationPageState extends State<RegistrationPage>{
        {
          setState(() {_errorMessage ='Email is invalid';});
        }
-       //check if it already exists in the database
-       else
-       {
+       //check if it already exists in the databas
+       else {
          setState(() {_errorMessage ='';});
        }
+
      }
   }
 
-  void checkPasswordVal(String password) async {
+  void checkPasswordVal(String password, String cpassword) async {
     if (password.isEmpty)
     {
       setState(() {
-        password.isEmpty ? _passValidate = true : _passValidate = false;
+        _passValidate = true;
+      });
+    }
+    else if(cpassword.isEmpty)
+    {
+      setState(() {
+        _pcValidate =true;
       });
     }
     else{
@@ -270,28 +331,57 @@ class RegistrationPageState extends State<RegistrationPage>{
     }
   }
 
+  void sendOtp() async {
+    // bool result = await emailAuth.sendOtp(
+    //     recipientMail: emailController.value.text, otpLength: 5
+    // );
+  }
+
   void register() async{
-    if (_userValidate == false &&
-        _emailValidate == false &&
-        _passValidate ==false && _errorMessage.isEmpty) {
+    // final String password =Crypt.sha256(passwordController.text).toString();
 
-      final String password =Crypt.sha256(passwordController.text).toString();
+    final patient = Patient(id: m.ObjectId(),
+      username: usernameController.text,
+      email: emailController.text,
+      password: passwordController.text,);
 
-      final patient = Patient(
-        id: m.ObjectId(),
-        username: usernameController.text,
-        email: emailController.text,
-        password: password,
-      );
-      await DBConnection.insert(patient);
-      setState(()
-      {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
-      });
+    var findEmail = await DBConnection.findEmail(patient);
 
-
+    if (findEmail != null) {
+      setState(() {_errorMessage = 'Email already exist';});
     }
+    else {
+      setState(() {_errorMessage = '';});
 
+      if (_userValidate == false &&
+          _emailValidate == false &&
+          _passValidate ==false && _errorMessage.isEmpty){
+
+        showDialog(context: context,
+          builder: (ctx) =>  AlertDialog(
+            title: const Text('Successful!'),
+            content: OTPTextField(
+              length: 5,
+              width: MediaQuery.of(ctx).size.width,
+              fieldWidth: 50,
+              style: const TextStyle(
+                  fontSize: 17
+              ),
+              textFieldAlignment: MainAxisAlignment.spaceAround,
+              fieldStyle: FieldStyle.underline,
+              onCompleted: (pin) async {
+                // await DBConnection.insert(patient);
+                setState(() {
+                  Navigator.pop(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginPage()));
+                });
+              },
+            ),
+          ),
+        );
+      }
+    }
   }
 
 }
