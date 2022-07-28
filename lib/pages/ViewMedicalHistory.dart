@@ -1,27 +1,16 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-class QrScanPage extends StatefulWidget {
-
-  final String HashCode;
-
-  const QrScanPage({required this.HashCode});
-
+class ViewMedicalHistory extends StatefulWidget {
+  const ViewMedicalHistory({Key? key}) : super(key: key);
 
   @override
-  State<QrScanPage> createState() => _QrScanPageState();
-
+  State<ViewMedicalHistory> createState() => _ViewMedicalHistoryState();
 }
 
-class _QrScanPageState extends State<QrScanPage> {
-
-
+class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,26 +31,24 @@ class _QrScanPageState extends State<QrScanPage> {
 
                     ),
                   ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    "Let your doctor scan your QR code",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: "Monda",
-                        color: Color.fromRGBO(1, 77, 94, 1)
-                    ),),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  QrImage(
-                    foregroundColor: Color.fromRGBO(1, 77, 94, 1),
-                    data: widget.HashCode,
-                    version: QrVersions.auto,
-                    size: 400.0,
+                  Center(
+                      child: SfLinearGauge(
+                        ranges: [
+                          //Applies linear gradient. The start and end values are 0 to 100 by default
+                          LinearGaugeRange(
+                              startWidth: 20,
+                              endWidth: 20,
+                              shaderCallback: (bounds) => LinearGradient(
+                                  begin: Alignment.centerRight,
+                                  end: Alignment.centerLeft,
+                                  colors: [Color.fromRGBO(1, 77, 94, 1), Color.fromRGBO(
+                                      255, 247, 214, 1.0)])
+                                  .createShader(bounds))
+                        ],
+                      ),
+                )
 
-                  ),
+
 
                 ],
               ),

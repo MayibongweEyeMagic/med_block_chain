@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:med_block_chain/pages/GeneratePasswordPage.dart';
+import 'package:med_block_chain/pages/ViewMedicalHistory.dart';
 import 'package:med_block_chain/pages/login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -73,7 +75,12 @@ class _HomePageState extends State<HomePage> {
                 height: 50,
               ),
               ElevatedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const GeneratePasswordPage()),
+                    );
+                  },
                   child: Text(
                       "Generate Password"
                   ,style: TextStyle(
@@ -97,7 +104,12 @@ class _HomePageState extends State<HomePage> {
                 height: 10,
               ),
               ElevatedButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ViewMedicalHistory()),
+                  );
+                },
                 child: Text(
                   "View Medical History"
                   ,style: TextStyle(
