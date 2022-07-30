@@ -32,6 +32,7 @@ class RegistrationPageState extends State<RegistrationPage>{
   bool _pcValidate =false;
 
   String _errorMessage ='';
+  String _errorPass ='';
 
 
   TextEditingController usernameController = TextEditingController();
@@ -207,7 +208,7 @@ class RegistrationPageState extends State<RegistrationPage>{
                           decoration:InputDecoration(
                               border: InputBorder.none,
                               labelText: 'Confirm Password',
-                              errorText: _pcValidate ? 'Field can\'t be empty' : null,
+                              errorText: _pcValidate ? _errorPass : null,
 
                           ),
                         ),
@@ -234,8 +235,8 @@ class RegistrationPageState extends State<RegistrationPage>{
                       onPressed: () {
                         checkUsernameVal(usernameController.text);
                         checkEmailValidity(emailController.text);
-                        checkPasswordVal(passwordController.text, passConfirmController.text);
-                        register();
+                        checkPasswordVal(passwordController.text);
+                        checkConfirmPassword(passwordController.text, passConfirmController.text);
                       },
                       style: ElevatedButton.styleFrom(
                           primary: const Color.fromARGB(255, 1, 77, 94), //background color of button
@@ -306,17 +307,11 @@ class RegistrationPageState extends State<RegistrationPage>{
      }
   }
 
-  void checkPasswordVal(String password, String cpassword) async {
+  void checkPasswordVal(String password) async {
     if (password.isEmpty)
     {
       setState(() {
         _passValidate = true;
-      });
-    }
-    else if(cpassword.isEmpty)
-    {
-      setState(() {
-        _pcValidate =true;
       });
     }
     else{
@@ -330,13 +325,30 @@ class RegistrationPageState extends State<RegistrationPage>{
     }
   }
 
-  // void sendOtp() async {
-  //   // bool result = await emailAuth.sendOtp(
-  //   //     recipientMail: emailController.value.text, otpLength: 5
-  //   // );
-  // }
+  void checkConfirmPassword(String password, String cpassword) async {
+    if (cpassword.isEmpty) {
+      setState(() {
+        _pcValidate =true;
+        _errorPass ='Field can\'t be empty';
+      });
+    }
+    else {
+      setState(() {_pcValidate =false;});
 
-  void register() async{
+      if (password != cpassword) {
+        setState(() {
+          _pcValidate =true;
+          _errorPass ='Passwords don\'t match';
+        });
+      }
+      else {
+        setState(() {_pcValidate =false;});
+        register();
+      }
+    }
+  }
+
+  void register() async {
     // final String password =Crypt.sha256(passwordController.text).toString();
 
     final patient = Patient(id: m.ObjectId(),
@@ -371,9 +383,7 @@ class RegistrationPageState extends State<RegistrationPage>{
               onCompleted: (pin) async {
                 // await DBConnection.insert(patient);
                 setState(() {
-                  Navigator.pop(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()));
+                  Navigator.pop(context, MaterialPageRoute(builder: (context) => const LoginPage()));
                 });
               },
             ),

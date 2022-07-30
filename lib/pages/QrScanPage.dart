@@ -42,16 +42,52 @@ class _QrScanPageState extends State<QrScanPage> {
               ),
               const SizedBox(height: 20,),
                Card(
+
                 elevation: 0,
                 color: Color.fromARGB(255, 1, 77, 94),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
+                child: SizedBox(
+                  width: 300,
+                  height: 100,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.grey[300],
+                          ),
 
-                      ],
-                    )
-                  ],
+                          Column(
+                            children: [
+                              Row(
+                                children: const [
+                                  Text(
+                                    'Doctor\'s name',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text('Dr Isaia Rashad',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: const [
+                                  Text('License No: ', style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text('25641165', style: TextStyle(color: Colors.white),)
+                                ],
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
 
