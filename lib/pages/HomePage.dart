@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   child: Text(
-                      "Generate Password"
+                      "Provide Medical File Access"
                   ,style: TextStyle(
                     fontSize: 20,
                     fontFamily: "Monda"

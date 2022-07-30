@@ -8,12 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrScanPage extends StatefulWidget {
-
-  final String HashCode;
-
-  const QrScanPage({required this.HashCode});
-
-
   @override
   State<QrScanPage> createState() => _QrScanPageState();
 
@@ -25,72 +19,41 @@ class _QrScanPageState extends State<QrScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child:Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Center(
+          child: Column(
             children: [
+              const SizedBox(height: 30,),
 
-              Column(
-                children: [
-                  Center(
-                    child: SvgPicture.asset(
-                      "assets/caduceus-medical-symbol.svg",
-                      width: 50,
-                      height: 50,
-
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    "Let your doctor scan your QR code",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: "Monda",
-                        color: Color.fromRGBO(1, 77, 94, 1)
-                    ),),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  QrImage(
-                    foregroundColor: Color.fromRGBO(1, 77, 94, 1),
-                    data: widget.HashCode,
-                    version: QrVersions.auto,
-                    size: 400.0,
-
-                  ),
-
-                ],
+              SvgPicture.asset(
+                'assets/caduceus-medical-symbol.svg',
+                width: 50,
+                height: 50,
               ),
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                child: ElevatedButton(
-                  onPressed: (){
+              const SizedBox(height: 20,),
+              const Text("Grant Access",
+                  style:TextStyle(
+                      color: Color.fromARGB(255, 1, 77, 94),
+                      fontFamily: 'Monda',
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 15
+                  )
+              ),
+              const SizedBox(height: 20,),
+               Card(
+                elevation: 0,
+                color: Color.fromARGB(255, 1, 77, 94),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
 
-                  },
-                  child: Text(
-                    "Done"
-                    ,style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: "Monda"
-                  ),
-                  ),
-                  style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(352, 60)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          )
-                      ),
-                      backgroundColor: MaterialStateProperty.all(Color.fromRGBO(1, 77, 94, 1)
-
-                      )
-                  ),
+                      ],
+                    )
+                  ],
                 ),
-              )
+              ),
 
             ],
           ),
@@ -99,3 +62,32 @@ class _QrScanPageState extends State<QrScanPage> {
     );
   }
 }
+
+// child: Card(
+// child: Column(
+// mainAxisSize: MainAxisSize.min,
+// children: <Widget>[
+// const ListTile(
+// leading: Icon(Icons.album),
+// title: Text('The Enchanted Nightingale'),
+// subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
+// ),
+// Row(
+// mainAxisAlignment: MainAxisAlignment.end,
+// children: <Widget>[
+// TextButton(
+// child: const Text('BUY TICKETS'),
+// onPressed: () {/* ... */},
+// ),
+// const SizedBox(width: 8),
+// TextButton(
+// child: const Text('LISTEN'),
+// onPressed: () {/* ... */},
+// ),
+// const SizedBox(width: 8),
+// ],
+// ),
+// ],
+// ),
+// ),
+// );
