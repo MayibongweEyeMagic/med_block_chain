@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:med_block_chain/model/api_service.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ViewMedicalHistory extends StatefulWidget {
@@ -11,6 +12,20 @@ class ViewMedicalHistory extends StatefulWidget {
 }
 
 class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
+  ApiService apiService =ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      apiService.fetchUsers();
+    }catch(e){
+      print(e);
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
