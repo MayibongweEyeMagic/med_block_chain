@@ -368,27 +368,10 @@ class RegistrationPageState extends State<RegistrationPage>{
           _emailValidate == false &&
           _passValidate ==false && _errorMessage.isEmpty){
 
-        showDialog(context: context,
-          builder: (ctx) =>  AlertDialog(
-            title: const Text('Successful!'),
-            content: OTPTextField(
-              length: 5,
-              width: MediaQuery.of(ctx).size.width,
-              fieldWidth: 50,
-              style: const TextStyle(
-                  fontSize: 17
-              ),
-              textFieldAlignment: MainAxisAlignment.spaceAround,
-              fieldStyle: FieldStyle.underline,
-              onCompleted: (pin) async {
-                // await DBConnection.insert(patient);
-                setState(() {
-                  Navigator.pop(context, MaterialPageRoute(builder: (context) => const LoginPage()));
-                });
-              },
-            ),
-          ),
-        );
+          await DBConnection.insert(patient);
+          setState(() {
+            Navigator.pop(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+          });
       }
     }
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:med_block_chain/component/doctor_file.dart';
 import 'package:med_block_chain/model/api_service.dart';
+import 'package:med_block_chain/model/medical_record.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ViewMedicalHistory extends StatefulWidget {
@@ -12,26 +14,22 @@ class ViewMedicalHistory extends StatefulWidget {
 }
 
 class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
+
   ApiService apiService =ApiService();
 
   @override
   void initState() {
     super.initState();
-    try {
-      apiService.fetchUsers();
-    }catch(e){
-      print(e);
-    }
+    apiService =ModalRoute.of(context)?.settings.arguments as ApiService;
+
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child:Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -53,7 +51,7 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                           LinearGaugeRange(
                               startWidth: 20,
                               endWidth: 20,
-                              shaderCallback: (bounds) => LinearGradient(
+                              shaderCallback: (bounds) => const LinearGradient(
                                   begin: Alignment.centerRight,
                                   end: Alignment.centerLeft,
                                   colors: [Color.fromRGBO(1, 77, 94, 1), Color.fromRGBO(
@@ -61,25 +59,57 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                                   .createShader(bounds))
                         ],
                       ),
-                )
+                ),
 
+                 const SizedBox(height: 60,),
 
+                  Container(
+                    height: 430,
+                    width: 340,
+                    decoration: BoxDecoration(color: const Color.fromARGB(255, 1, 77, 94),
+                        borderRadius: BorderRadius.circular(18.0)),
+                    child: FutureBuilder(
+                      future: apiService.fetchUsers(),
+                      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting){
+                          return Container(
+                            color: const Color.fromARGB(255, 1, 77, 94),
+                            child: const LinearProgressIndicator(
+                              backgroundColor: Colors.white,
+                            ),
+                          );
+                        } else {
+                          if (snapshot.hasError) {
+                            return Container(
+                              color: const Color.fromARGB(255, 1, 77, 94),
+                              child: Center(
+                                child: Text(
+                                  'Something went wrong, try again.',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                              ),
+                            );
+                          } else {
+                            return ListView.builder(itemBuilder: (context, index) {
+                              return Padding(padding: EdgeInsets.all(8.0),
+                                // child: DoctorsCard(medicalRecord: MedicalRecord.fromMap(snapshot.data[index]),),
+                              );
+                            });
+                          }
+                        }
+                      },
+                    ),
+
+                  ),
 
                 ],
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                 child: ElevatedButton(
                   onPressed: (){
 
                   },
-                  child: Text(
-                    "Done"
-                    ,style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: "Monda"
-                  ),
-                  ),
                   style: ButtonStyle(
                       minimumSize: MaterialStateProperty.all(Size(352, 60)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -90,6 +120,13 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                       backgroundColor: MaterialStateProperty.all(Color.fromRGBO(1, 77, 94, 1)
 
                       )
+                  ),
+                  child: const Text(
+                    "Done"
+                    ,style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: "Monda"
+                  ),
                   ),
                 ),
               )

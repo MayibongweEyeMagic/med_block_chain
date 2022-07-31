@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:med_block_chain/pages/HomePage.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class GeneratePasswordPage extends StatefulWidget {
@@ -35,25 +36,28 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        child: Scaffold(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
             body: Column(
               children: [
                 Expanded(
                     flex: 4,
                     child: _buildQrView(context)
                 ),
-              ],)
-        ),
-        onWillPop: () {
-          return Future(() => false);
-        });
+                // Positioned(child: ,),
+
+              ],
+            ),
+        );
+
   }
+
+
 
   Widget _buildQrView(BuildContext context) {
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
         MediaQuery.of(context).size.height < 400)
-        ? 100.0
+        ? 200.0
         : 250.0;
 
     return QRView(
@@ -65,7 +69,8 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
             borderLength: 30,
             borderWidth: 10,
             cutOutSize: scanArea),
-        onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p));
+        // onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p)
+    );
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
@@ -84,9 +89,9 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
         result = scanData;
       });
     });
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (context) => const GeneratePasswordPage()),
-            (route) => false);
+  //   Navigator.pushAndRemoveUntil(context,
+  //       MaterialPageRoute(builder: (context) => const GeneratePasswordPage()),
+  //           (route) => false);
   }
 }
 
