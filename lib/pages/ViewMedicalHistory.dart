@@ -17,12 +17,12 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
 
   ApiService apiService =ApiService();
 
-  @override
-  void initState() {
-    super.initState();
-    apiService =ModalRoute.of(context)?.settings.arguments as ApiService;
-
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   apiService =ModalRoute.of(context)?.settings.arguments as ApiService;
+  //
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,8 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                         if (snapshot.connectionState == ConnectionState.waiting){
                           return Container(
                             color: const Color.fromARGB(255, 1, 77, 94),
-                            child: const LinearProgressIndicator(
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
                               backgroundColor: Colors.white,
                             ),
                           );

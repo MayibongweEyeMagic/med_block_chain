@@ -87,6 +87,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+        print(result.toString());
       });
     });
   //   Navigator.pushAndRemoveUntil(context,
