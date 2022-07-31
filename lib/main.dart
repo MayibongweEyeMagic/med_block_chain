@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:med_block_chain/pages/GeneratePasswordPage.dart';
 import 'package:med_block_chain/pages/HomePage.dart';
 import 'package:med_block_chain/pages/QrScanPage.dart';
+import 'package:med_block_chain/pages/ViewMedicalHistory.dart';
 import 'package:med_block_chain/pages/login_page.dart';
 
 import 'database/connectDB.dart';
@@ -18,11 +19,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context)  {
-    return const MaterialApp(
+    return MaterialApp(
      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SafeArea(
-          child: LoginPage(),
+          child: ViewMedicalHistory(),
         ),
       ),
     );
