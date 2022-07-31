@@ -93,7 +93,7 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                           } else {
                             return ListView.builder(itemBuilder: (context, index) {
                               return Padding(padding: EdgeInsets.all(8.0),
-                                // child: DoctorsCard(medicalRecord: MedicalRecord.fromMap(snapshot.data[index]),),
+                                child: DoctorsCard(medicalRecord: MedicalRecord.fromMap(returnDict(snapshot.data[-1].name)),),
                               );
                             });
                           }
@@ -137,5 +137,23 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
         ),
       ),
     );
+  }
+  // inal String docName;
+  // final String clinicalSummary;
+  // final String diagnoses;
+  // final String dateOfVisit;
+  // final String clinicalDetails;
+
+   returnDict(String lastInfo) async {
+    var splitted = lastInfo.split('/');
+
+    Map<String, dynamic> map1 = {
+      'docName' : splitted[0],
+      'clinical' : splitted[1],
+      'diagnoses' : splitted[2],
+      'dateOfVisit' : splitted[3],
+      'clinicalDetails' : splitted[4]};
+
+    return map1;
   }
 }
