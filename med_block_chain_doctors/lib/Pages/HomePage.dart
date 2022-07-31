@@ -1,0 +1,31 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          child: Column(
+            children: [
+              SvgPicture.asset(
+                "assets/caduceus-medical-symbol.svg",
+                height: 50,
+                width: 50,
+              ),
+            ],
+          )
+        ),
+      ),
+    );
+  }
+}
